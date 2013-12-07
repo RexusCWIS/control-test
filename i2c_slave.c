@@ -1,3 +1,4 @@
+#include <p18f2520.h>
 #include "i2c_slave.h"
 
 unsigned char I2C_Send[21] = "MICROCHIP:I2C_SLAVE" ;
@@ -13,7 +14,7 @@ void i2c_slave_init(unsigned int id) {
 
     OpenI2C(SLAVE_7, SLEW_OFF);
 
-    SSPADD = 0x42;							//initialze slave address
+    SSPADD = 0x22;							//initialze slave address
 //********************* Read the address sent by master from buffer **************
 		while(DataRdyI2C()==0);			//WAIT UNTILL THE DATA IS TRANSMITTED FROM master
 		temp = ReadI2C();

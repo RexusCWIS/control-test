@@ -1,3 +1,6 @@
-_main: CODE, 32688 0 8
-__initialization: CODE, 32718 0 44
-Total: 52
+_main: CODE, 282 0 10
+_timer_init: CODE, 220 0 26
+__initialization: CODE, 170 0 44
+_board_config: CODE, 268 0 14
+_generic_isr: CODE, 8 0 162
+Total: 256

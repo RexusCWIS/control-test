@@ -27,7 +27,11 @@
 *.sym
 *.cmf
 
-#Microchip files
+# Microchip files
 *.p1
 *.d
 *.pre
+
+# Other
+.DS_Store
+

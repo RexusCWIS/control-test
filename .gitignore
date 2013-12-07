@@ -16,3 +16,18 @@
 *.exe
 *.out
 *.app
+*.elf
+*.hex
+*.map
+*.lst
+*.rlf
+*.sdb
+*.hxl
+*.obj
+*.sym
+*.cmf
+
+#Microchip files
+*.p1
+*.d
+*.pre

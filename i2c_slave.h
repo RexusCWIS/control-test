@@ -14,8 +14,10 @@ extern "C" {
 
     typedef enum {
         I2C_WRITE_SET_REG,
-        I2C_WRITE_DATA
-    }i2c_write_state_e;
+        I2C_WRITE_DATA,
+        I2C_READ_SET_REG,
+        I2C_READ_DATA
+    }i2c_state_machine_e;
 
     /**
      * @brief Initializes the microcontroller as a I2C slave.

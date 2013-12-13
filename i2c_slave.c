@@ -7,7 +7,6 @@ void i2c_slave_init(unsigned char id) {
     SSPSTAT = 0x80;     /* Deactivate slew control */
     SSPCON1 = 0x36;     /* Enable serial port, I2C slave mode, 7-bit address */
 
-    //SSPCON2bits.GCEN = 1;   /* Accept broadcast address */
     SSPCON2bits.SEN  = 1;   /* Enable clock stretching */
 
     SSPADD = id;            /* Set address on the I2C bus */

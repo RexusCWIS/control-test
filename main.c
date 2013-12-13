@@ -10,6 +10,7 @@
 #include <p18f2520.h>
 
 #include "i2c_slave.h"
+#include "i2c_frames.h"
 
 #pragma config OSC = INTIO7
 #pragma config WDT = OFF   
@@ -25,15 +26,21 @@
 static unsigned int time   = 0;
 static unsigned char dummy = 0;
 static unsigned int i2c_index  = 0;
-static unsigned char i2c_register = 0;
+static unsigned char i2c_dev_reg = 0;
 
-static unsigned char i2c_rx_frame[I2C_RX_FRAME_SIZE]; 
-static unsigned char i2c_tx_frame[I2C_TX_FRAME_SIZE];
+static unsigned char i2c_rx_frame[I2C_RX_FRAME_SIZE];
+static unsigned char i2c_tx_frame[I2C_TX_FRAME_SIZE] = "YES";
+
+/** @brief Order sent to the camera module.  */
+static i2c_order_e camera_order;
+/** @brief I2C frame, holding the data acquired by sensors. */
+static i2c_frame_s acquisition_data;
 
 static unsigned char* i2c_rx_registers[1] = {i2c_rx_frame};
 static unsigned char* i2c_tx_registers[2] = {i2c_tx_frame, i2c_rx_frame};
+static unsigned char i2c_tx_reg_sizes[2]  = {3, 32};
 
-static i2c_write_state_e i2c_write_state; 
+static i2c_state_machine_e i2c_state;
 
 void interrupt generic_isr(void) {
 
@@ -54,23 +61,21 @@ void interrupt generic_isr(void) {
             /* Last byte was a memory address */
             if(!SSPSTATbits.D_nA) {
 
-                i2c_index = 0u;                     /* Clear index */
-                SSPBUF = i2c_rx_frame[i2c_index];   /* Send first byte */
-                i2c_index++;
+                SSPBUF = i2c_tx_registers[i2c_dev_reg][0u];
+                i2c_index = 1u;         /* Clear index */
                 SSPCON1bits.CKP = 1;    /* Release I2C clock */
             }
 
             /* Last byte was data (the slave is transmitting the frame) */
             if(SSPSTATbits.D_nA) {
 
-                if(i2c_index < I2C_TX_FRAME_SIZE) {
-                    SSPBUF = i2c_rx_frame[i2c_index];
-                    i2c_index++; 
+                if (i2c_index < i2c_tx_reg_sizes[i2c_dev_reg]) {
+                    SSPBUF = i2c_tx_registers[i2c_dev_reg][i2c_index];
+                    i2c_index++;
                 }
-
-                /* If we're done transmitting the frame, empty the I2C buffer */
+                    /* If we're done transmitting the frame, empty the I2C buffer */
                 else {
-                    dummy = SSPBUF; 
+                    dummy = SSPBUF;
                 }
 
                 SSPCON1bits.CKP = 1;    /* Release I2C clock */
@@ -83,21 +88,21 @@ void interrupt generic_isr(void) {
             /* Last byte was a memory address */
             if(!SSPSTATbits.D_nA) {
                 dummy = SSPBUF;         /* Clear I2C buffer */
-                i2c_write_state = I2C_WRITE_SET_REG; 
+                i2c_state = I2C_WRITE_SET_REG; 
                 SSPCON1bits.CKP = 1;    /* Release I2C clock */
             }
 
             if(SSPSTATbits.D_nA) {
 
-                if(i2c_write_state == I2C_WRITE_SET_REG) {
-                    i2c_register = SSPBUF;
+                if(i2c_state == I2C_WRITE_SET_REG) {
+                    i2c_dev_reg = SSPBUF;
                     i2c_index = 0;
-                    i2c_write_state = I2C_WRITE_DATA; 
+                    i2c_state = I2C_WRITE_DATA; 
                 }
 
                 else {
                     if(i2c_index < I2C_RX_FRAME_SIZE) {
-                        i2c_rx_registers[i2c_register][i2c_index] = SSPBUF;
+                        i2c_rx_registers[i2c_dev_reg][i2c_index] = SSPBUF;
                         i2c_index++;
                     }
 

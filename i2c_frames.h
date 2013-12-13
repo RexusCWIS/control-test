@@ -31,7 +31,7 @@ typedef enum {
  *          the I2C bus master performs a read operation. 
  */
 typedef struct {
-    int time;                               /**< @brief Time at which data acquisition occured. */
+    unsigned int time;                      /**< @brief Time at which data acquisition occured. */
     temperature_data_s temperatures[3];     /**< @brief Temperature sensors data. */
     pressure_data_s pressure;               /**< @brief Pressure sensor data. */
     unsigned char status[2];                /**< @brief Control module status. */

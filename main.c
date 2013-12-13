@@ -29,16 +29,15 @@ static unsigned int i2c_index  = 0;
 static unsigned char i2c_dev_reg = 0;
 
 static unsigned char i2c_rx_frame[I2C_RX_FRAME_SIZE];
-static unsigned char i2c_tx_frame[I2C_TX_FRAME_SIZE] = "YES";
 
 /** @brief Order sent to the camera module.  */
-static i2c_order_e camera_order;
+static i2c_order_e camera_order = STOP_ACQUISITION;
 /** @brief I2C frame, holding the data acquired by sensors. */
 static i2c_frame_s acquisition_data;
 
 static unsigned char* i2c_rx_registers[1] = {i2c_rx_frame};
-static unsigned char* i2c_tx_registers[2] = {i2c_tx_frame, i2c_rx_frame};
-static unsigned char i2c_tx_reg_sizes[2]  = {3, 32};
+static unsigned char* i2c_tx_registers[2] = {(unsigned char *) &camera_order, (unsigned char *) &acquisition_data};
+static unsigned char i2c_tx_reg_sizes[2]  = {sizeof(i2c_order_e), sizeof(i2c_frame_s)};
 
 static i2c_state_machine_e i2c_state;
 
@@ -157,8 +156,20 @@ int main(int argc, char** argv) {
 
     //i2c_slave_init(42);
 
-    while(1)
-        ;
+    while(1) {
+        /* Disable interrupts during 2-bytes data access */
+        di();
+        acquisition_data.time = time;
+        ei();
+        
+        if(PORTCbits.RC5 == 1) {
+            camera_order = START_ACQUISITION;
+        }
+
+        else {
+            camera_order = STOP_ACQUISITION; 
+        }
+    }
     
     return (EXIT_SUCCESS);
 }
@@ -168,6 +179,9 @@ static void board_config(void) {
 
     /* Sets RA5 as an output for the system LED */
     TRISAbits.RA5 = 0;
+
+    /* Input button */
+    TRISCbits.RC5 = 1;
 
     /* I2C I/O configuration */
     TRISCbits.RC3 = 1;      /* SCL set as input */

@@ -1,7 +1,7 @@
-_main: CODE, 506 0 64
-_timer_init: CODE, 660 0 26
-__initialization: CODE, 570 0 44
-_board_config: CODE, 686 0 20
+_main: CODE, 506 0 94
+_timer_init: CODE, 650 0 26
+__initialization: CODE, 600 0 44
+_board_config: CODE, 676 0 22
 _generic_isr: CODE, 8 0 498
-_i2c_slave_init: CODE, 706 0 16
-Total: 668
+_i2c_slave_init: CODE, 698 0 16
+Total: 700

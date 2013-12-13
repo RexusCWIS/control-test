@@ -8,18 +8,20 @@
 #ifndef I2C_SLAVE_H
 #define	I2C_SLAVE_H
 
-/* Awful include directive due to the fact that the editor can't fnd the file */
-#include "/Applications/microchip/xc8/v1.21/include/plib/i2c.h"
-
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
+    typedef enum {
+        I2C_WRITE_SET_REG,
+        I2C_WRITE_DATA
+    }i2c_write_state_e;
 
     /**
      * @brief Initializes the microcontroller as a I2C slave.
      * @param id    ID on the I2C bus. 
      */
-    void i2c_slave_init(unsigned int id);
+    void i2c_slave_init(unsigned char id);
 
 
 

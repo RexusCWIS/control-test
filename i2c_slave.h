@@ -13,10 +13,8 @@ extern "C" {
 #endif
 
     typedef enum {
-        I2C_WRITE_SET_REG,
-        I2C_WRITE_DATA,
-        I2C_READ_SET_REG,
-        I2C_READ_DATA
+        I2C_SET_DEV_REG,
+        I2C_DATA
     }i2c_state_machine_e;
 
     /**

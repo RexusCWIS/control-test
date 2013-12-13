@@ -87,16 +87,16 @@ void interrupt generic_isr(void) {
             /* Last byte was a memory address */
             if(!SSPSTATbits.D_nA) {
                 dummy = SSPBUF;         /* Clear I2C buffer */
-                i2c_state = I2C_WRITE_SET_REG; 
+                i2c_state = I2C_SET_DEV_REG;
                 SSPCON1bits.CKP = 1;    /* Release I2C clock */
             }
 
             if(SSPSTATbits.D_nA) {
 
-                if(i2c_state == I2C_WRITE_SET_REG) {
+                if(i2c_state == I2C_SET_DEV_REG) {
                     i2c_dev_reg = SSPBUF;
                     i2c_index = 0;
-                    i2c_state = I2C_WRITE_DATA; 
+                    i2c_state = I2C_DATA; 
                 }
 
                 else {

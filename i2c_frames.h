@@ -12,11 +12,11 @@
 #define ORDER   0xFF
 
 typedef struct {
-    unsigned char data[2];
+    unsigned int data;
 }pressure_data_s;
 
 typedef struct {
-    unsigned char data[2]; 
+    unsigned int data; 
 }temperature_data_s; 
 
 typedef enum {
@@ -36,6 +36,17 @@ typedef struct {
     pressure_data_s pressure;               /**< @brief Pressure sensor data. */
     unsigned char status[2];                /**< @brief Control module status. */
 } i2c_frame_s; 
+
+typedef struct {
+    unsigned char nb_of_images; 
+    unsigned char framerate; 
+    unsigned char status; 
+} i2c_camera_data_s; 
+
+typedef struct {
+    i2c_frame_s acquired_data;
+    i2c_camera_data_s camera_data; 
+} serial_frame_s; 
 
 #endif  /* DEF_I2C_FRAMES_H */
 

@@ -1,0 +1,6 @@
+_main: CODE, 310 0 10
+_timer_init: CODE, 252 0 26
+__initialization: CODE, 278 0 6
+_board_config: CODE, 294 0 16
+_isr: CODE, 8 0 244
+Total: 302

@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/sandbox.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=sandbox.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=sandbox/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/usart.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=usart.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=usart/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/sandbox/bin
+makeDirectory ${TMPDIR}/usart/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/sandbox.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/usart.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/sandbox.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/usart.tar *
 checkReturnCode
 
 # Cleanup

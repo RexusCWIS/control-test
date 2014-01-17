@@ -18,6 +18,8 @@
 static unsigned int time = 0;
 static unsigned char led_cntr = 0;
 
+static unsigned char boot_msg[60] = "This is the CWIS control module. Starting functional tests...";
+
 static inline void board_config(void); 
 
 void main(void) {

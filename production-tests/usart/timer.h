@@ -9,8 +9,8 @@
 #define	DEF_TIMER_H
 
 /* Timer 0 reload values for a 100-ms tick. */
-#define T0_RELOAD_HIGH  0x3Cu
-#define T0_RELOAD_LOW   0xAFu
+#define T0_RELOAD_HIGH  0xFCu
+#define T0_RELOAD_LOW   0xF2u
 
 void timer_init(void); 
 

@@ -10,6 +10,7 @@
 
 #include "board_config.h"
 #include "timer.h"
+#include "uart.h"
 
 #pragma config OSC = INTIO7
 #pragma config WDT = OFF   
@@ -18,15 +19,17 @@
 static unsigned int time = 0;
 static unsigned char led_cntr = 0;
 
-static unsigned char boot_msg[60] = "This is the CWIS control module. Starting functional tests...";
+static unsigned char boot_msg[62] = "This is the CWIS control module. Starting functional tests...\0";
 
 static inline void board_config(void); 
 
 void main(void) {
 
     board_config(); 
+    uart_init();
     timer_init();
 
+    //uart_send_string(boot_msg, 62u);
 
     while(1)
         ;
@@ -87,9 +90,9 @@ void interrupt isr(void) {
 static inline void board_config(void) {
 
     /* Set LED pads as outputs */
-    LATCbits.LATC0 = 0;
-    LATCbits.LATC1 = 0;
-    LATCbits.LATC5 = 0;
+    TRISCbits.TRISC0 = 0;
+    TRISCbits.TRISC1 = 0;
+    TRISCbits.TRISC5 = 0;
 
     /* Enable timer interrupts */
     INTCONbits.TMR0IF = 0;

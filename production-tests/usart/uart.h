@@ -10,5 +10,7 @@
 
 void uart_send_string(unsigned char str[], unsigned char str_size);
 
+void uart_init(void); 
+
 #endif	/* DEF_UART_H */
 

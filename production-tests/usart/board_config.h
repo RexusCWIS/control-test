@@ -17,5 +17,9 @@
 #define LED2    LATCbits.LATC1
 #define LED3    LATCbits.LATC5
 
+#define SODS    PORTBbits.RB1
+#define SOE     PORTBbits.RB2
+#define LO      PORTBbits.RB3
+
 #endif	/* DEF_BOARD_CONFIG_H */
 

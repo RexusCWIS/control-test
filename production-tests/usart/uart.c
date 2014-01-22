@@ -13,20 +13,23 @@ void uart_send_string(unsigned char str[], unsigned char str_size) {
 
     while(incr < str_size) {
 
-        TXREG = str[incr];
         while(!TXIF)
             ;
+        TXREG = str[incr];
+        incr++; 
     }
 }
 
 void uart_init(void) {
 
-    TXSTA |= 0x24u;
-    RCSTA |= 0x80u;
+    SPBRGH = 0;
+    SPBRG  = 102u;
 
     /* Select 16-bit mode */
-    BAUDCON |= 0x04u;
+    BAUDCON = 0x8u;
 
-    SPBRGH = 0;
-    SPBRG  = 51u;
+    /* Configure and start peripheral */
+    RCSTA = 0x80u;
+    TXSTA = 0x24u;
+    
 }

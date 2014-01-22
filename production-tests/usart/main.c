@@ -19,20 +19,33 @@
 static unsigned int time = 0;
 static unsigned char led_cntr = 0;
 
-static unsigned char boot_msg[62] = "This is the CWIS control module. Starting functional tests...\0";
+static unsigned char boot_msg[68] = "\n\rThis is the CWIS control module. Starting functional tests...\n\r\n\r\0";
+
 
 static inline void board_config(void); 
 
 void main(void) {
 
     board_config(); 
-    uart_init();
     timer_init();
+    uart_init();
 
-    //uart_send_string(boot_msg, 62u);
+    uart_send_string(boot_msg, sizeof(boot_msg));
 
-    while(1)
-        ;
+    while(1) {
+
+        if(LO == 1) {
+            LED3 = 1;
+        }
+
+        if(SODS == 1) {
+            LED2 = 1;
+        }
+
+        if(SOE == 1) {
+            LED1 = 1; 
+        }
+    }
 }
 
 void interrupt isr(void) {
@@ -50,35 +63,37 @@ void interrupt isr(void) {
             led_cntr = 0; 
         }
 
-        switch(led_cntr) {
+        if((!LO) && (!SODS) && (!SOE)) {
+            switch(led_cntr) {
 
-            case 0:
-                LED1 = ~LED1;
-                LED2 = ~LED2;
-                LED3 = ~LED3;
-                break;
+                case 0:
+                    LED1 = ~LED1;
+                    LED2 = ~LED2;
+                    LED3 = ~LED3;
+                    break;
 
-            case 2:
-                LED1 = ~LED1;
-                break;
+                case 2:
+                    LED1 = ~LED1;
+                    break;
 
-            case 4:
-                LED1 = ~LED1;
-                break;
+                case 4:
+                    LED1 = ~LED1;
+                    break;
 
-            case 5:
-                LED2 = ~LED2;
-                break;
+                case 5:
+                    LED2 = ~LED2;
+                    break;
 
-            case 6:
-                LED1 = ~LED1;
-                break;
+                case 6:
+                    LED1 = ~LED1;
+                    break;
 
-            case 8:
-                LED1 = ~LED1;
+                case 8:
+                    LED1 = ~LED1;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
 }
@@ -89,10 +104,25 @@ void interrupt isr(void) {
  */
 static inline void board_config(void) {
 
+    /* Set LO, SODS and SOE pads as inputs */
+    TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB2 = 1;
+    TRISBbits.TRISB3 = 1;
+
     /* Set LED pads as outputs */
     TRISCbits.TRISC0 = 0;
     TRISCbits.TRISC1 = 0;
     TRISCbits.TRISC5 = 0;
+
+    /* ADC configuration */
+
+    /* Set V3 as +REF (1V), set analog input channels ( last 0b00011100) */
+    ADCON1=0b00011010;
+    
+    /* Set bits right shifted, acquisition time 16 Tad = 64us,
+     * conversion clock Fosc/16 = 4us (default 100 Fosc/4) */
+    ADCON2=0b10110101;
+
 
     /* Enable timer interrupts */
     INTCONbits.TMR0IF = 0;

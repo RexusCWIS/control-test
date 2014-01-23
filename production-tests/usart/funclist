@@ -1,8 +1,9 @@
-_main: CODE, 266 0 86
-_uart_init: CODE, 576 0 22
-_timer_init: CODE, 550 0 26
-__initialization: CODE, 422 0 38
-_board_config: CODE, 516 0 34
-_isr: CODE, 8 0 258
-_uart_send_data: CODE, 470 0 46
-Total: 510
+i2_uart_send_data: CODE, 582 0 46
+_main: CODE, 300 0 94
+_uart_init: CODE, 688 0 22
+_timer_init: CODE, 662 0 26
+__initialization: CODE, 488 0 38
+_board_config: CODE, 628 0 34
+_isr: CODE, 8 0 292
+_uart_send_data: CODE, 536 0 46
+Total: 598

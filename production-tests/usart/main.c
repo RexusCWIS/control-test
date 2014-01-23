@@ -21,8 +21,13 @@ static test_state_e current_state = RXSM_SIGNALS;
 static unsigned int time = 0;
 static unsigned char led_cntr = 0;
 
-static unsigned char boot_msg[68] = "\n\rThis is the CWIS control module. Starting functional tests...\n\r\n\r\0";
+/** @brief Message displayed at boot. */
+static unsigned char boot_msg[68]  = "\n\rThis is the CWIS control module. Starting functional tests...\n\r\n\r\0";
 
+/** @brief Dummy 24-byte data array used for downlink. */
+static unsigned char uart_data[24] = {'U', 'U', 0u, 27u, 1u, 2u, 3u, 4u, 5u, 6u,
+                                      7u, 8u, 9u, 10u, 11u, 12u, 13u, 14u, 15u,
+                                      'A', 'B', 'C', 'D'}; 
 
 static inline void board_config(void); 
 
@@ -56,7 +61,9 @@ void main(void) {
 
     current_state = LASER_POWER;
 
-    LASER = 1; 
+    LASER = 1;
+
+    current_state = DOWNLINK; 
 
     while(1)
         ;
@@ -108,6 +115,11 @@ void interrupt isr(void) {
                 default:
                     break;
             }
+        }
+
+        if(current_state == DOWNLINK) {
+
+            uart_send_data(uart_data, sizeof(uart_data));
         }
     }
 }

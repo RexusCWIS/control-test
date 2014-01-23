@@ -29,7 +29,8 @@
 typedef enum {
     RXSM_SIGNALS = 1,
     LASER_POWER = 2,
-    ANALOG_SENSORS = 3
+    DOWNLINK = 3,
+    ANALOG_SENSORS = 4
 
 
 } test_state_e;

@@ -23,7 +23,7 @@ void uart_send_data(unsigned char data[], unsigned char data_size) {
 void uart_init(void) {
 
     SPBRGH = 0;
-    SPBRG  = 102u;
+    SPBRG  = 51u;
 
     /* Select 16-bit mode */
     BAUDCON = 0x8u;

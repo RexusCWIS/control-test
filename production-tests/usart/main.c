@@ -34,7 +34,7 @@ void main(void) {
     timer_init();
     uart_init();
 
-    uart_send_string(boot_msg, sizeof(boot_msg));
+    uart_send_data(boot_msg, sizeof(boot_msg));
 
     while(flags != 0x7) {
 

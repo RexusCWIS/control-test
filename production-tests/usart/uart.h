@@ -8,7 +8,7 @@
 #ifndef DEF_UART_H
 #define DEF_UART_H
 
-void uart_send_string(unsigned char str[], unsigned char str_size);
+void uart_send_data(unsigned char data[], unsigned char data_size);
 
 void uart_init(void); 
 

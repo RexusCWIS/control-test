@@ -7,15 +7,15 @@
 
 #include "uart.h"
 
-void uart_send_string(unsigned char str[], unsigned char str_size) {
+void uart_send_data(unsigned char data[], unsigned char data_size) {
 
     unsigned char incr = 0;
 
-    while(incr < str_size) {
+    while(incr < data_size) {
 
         while(!TXIF)
             ;
-        TXREG = str[incr];
+        TXREG = data[incr];
         incr++; 
     }
 }

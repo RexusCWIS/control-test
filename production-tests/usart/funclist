@@ -4,5 +4,5 @@ _timer_init: CODE, 550 0 26
 __initialization: CODE, 422 0 38
 _board_config: CODE, 516 0 34
 _isr: CODE, 8 0 258
-_uart_send_string: CODE, 470 0 46
+_uart_send_data: CODE, 470 0 46
 Total: 510

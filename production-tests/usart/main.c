@@ -15,6 +15,8 @@
 #pragma config OSC = INTIO7
 #pragma config WDT = OFF   
 
+static test_state_e current_state = RXSM_SIGNALS;
+
 /** @brief Time, in multiples of 100-ms. */
 static unsigned int time = 0;
 static unsigned char led_cntr = 0;
@@ -26,26 +28,38 @@ static inline void board_config(void);
 
 void main(void) {
 
+    unsigned char flags = 0; 
+
     board_config(); 
     timer_init();
     uart_init();
 
     uart_send_string(boot_msg, sizeof(boot_msg));
 
-    while(1) {
+    while(flags != 0x7) {
 
         if(LO == 1) {
-            LED3 = 1;
+            flags |= 0x1; 
+            LED3  ^= 1;
         }
 
         if(SODS == 1) {
-            LED2 = 1;
+            flags |= 0x2;
+            LED2  ^= 1;
         }
 
         if(SOE == 1) {
-            LED1 = 1; 
+            flags |= 0x4;
+            LED1  ^= 1;
         }
     }
+
+    current_state = LASER_POWER;
+
+    LASER = 1; 
+
+    while(1)
+        ;
 }
 
 void interrupt isr(void) {
@@ -63,7 +77,7 @@ void interrupt isr(void) {
             led_cntr = 0; 
         }
 
-        if((!LO) && (!SODS) && (!SOE)) {
+        if(current_state != RXSM_SIGNALS) {
             switch(led_cntr) {
 
                 case 0:
@@ -109,6 +123,10 @@ static inline void board_config(void) {
     TRISBbits.TRISB2 = 1;
     TRISBbits.TRISB3 = 1;
 
+    /* Switch off laser and set pad as output */
+    LASER = 0; 
+    TRISBbits.TRISB4 = 0; 
+
     /* Set LED pads as outputs */
     TRISCbits.TRISC0 = 0;
     TRISCbits.TRISC1 = 0;
@@ -117,11 +135,11 @@ static inline void board_config(void) {
     /* ADC configuration */
 
     /* Set V3 as +REF (1V), set analog input channels ( last 0b00011100) */
-    ADCON1=0b00011010;
+    ADCON1 = 0b00011010;
     
     /* Set bits right shifted, acquisition time 16 Tad = 64us,
      * conversion clock Fosc/16 = 4us (default 100 Fosc/4) */
-    ADCON2=0b10110101;
+    ADCON2 = 0b10110101;
 
 
     /* Enable timer interrupts */
